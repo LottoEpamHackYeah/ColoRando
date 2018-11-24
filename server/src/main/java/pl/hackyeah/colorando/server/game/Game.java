@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class Game {
     private final String uuid;
@@ -12,7 +13,7 @@ public class Game {
     private final String location;
     private final int dimensionX;
     private final int dimensionY;
-    private final List<Integer> solution; // "123456789"
+    private final String solution; // "123456789"
 
     public Game(String location, int dimensionX, int dimensionY) {
         this.createdOn = new Date();
@@ -20,8 +21,13 @@ public class Game {
         this.location = location;
         this.dimensionX = dimensionX;
         this.dimensionY = dimensionY;
-        solution = Arrays.asList(new Integer[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }); // TOFIX: take dimensions into account
-        Collections.shuffle(solution);
+        List<String> solutionAsList = Arrays.asList(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" }); // TOFIX:
+                                                                                                                   // take
+                                                                                                                   // dimensions
+                                                                                                                   // into
+                                                                                                                   // account
+        Collections.shuffle(solutionAsList);
+        this.solution = solutionAsList.stream().collect(Collectors.joining());
     }
 
     public Game(String location) {
@@ -48,7 +54,7 @@ public class Game {
         return dimensionY;
     }
 
-    public List<Integer> getSolution() {
+    public String getSolution() {
         return solution;
     }
 }
