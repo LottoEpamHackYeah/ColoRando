@@ -2,13 +2,48 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/game_title"
-        android:textSize="36dp"
-        android:gravity="center" />
+        <!--row 1-->
+    <!--<TextView-->
+        <!--android:id="@+id/t1"-->
+        <!--android:layout_width="100sp"-->
+        <!--android:layout_height="100sp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:background="@color/colorPrimaryDark" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/t2"-->
+        <!--android:layout_width="100sp"-->
+        <!--android:layout_height="100sp"-->
+        <!--android:background="@color/colorAccent" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/row1col3"-->
+            <!--android:layout_width="100sp"-->
+            <!--android:layout_height="100sp"-->
+            <!--android:text="TextView" />-->
+
+
+        <!--&lt;!&ndash;row 2&ndash;&gt;-->
+        <!--<TextView-->
+            <!--android:id="@+id/row2col1"-->
+            <!--android:layout_width="100sp"-->
+            <!--android:layout_height="100sp"-->
+            <!--android:text="TextView" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/row2col2"-->
+            <!--android:layout_width="100sp"-->
+            <!--android:layout_height="100sp"-->
+            <!--android:text="TextView" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/row2col3"-->
+            <!--android:layout_width="100sp"-->
+            <!--android:layout_height="100sp"-->
+            <!--android:text="TextView" />-->
 </RelativeLayout>
