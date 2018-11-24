@@ -12,6 +12,7 @@
 *.iml
 build
 .gradle
+local.properties
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
