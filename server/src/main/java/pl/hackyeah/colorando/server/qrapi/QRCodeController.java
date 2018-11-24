@@ -57,6 +57,7 @@ class QRCodeController {
             return "Not allowed to play this shared game"; // TODO: report the user is not allowed to play this shared game
         }
         String newShareGameId = gameService.generateNewGameWithNoSahring();
+        userService.withdrawMoney(/*some attributes of different user*/);
         return newShareGameId;
     }
 }

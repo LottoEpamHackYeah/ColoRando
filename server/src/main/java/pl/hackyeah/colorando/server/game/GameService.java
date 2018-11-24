@@ -1,6 +1,7 @@
 package pl.hackyeah.colorando.server.game;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
+    private static final int MAX_SHARES = 20;
     private Map<String, Game> gamesById = new HashMap<>();
     private Map<String, List<String>> usersBannedForSharedGame = new HashMap<>();
+    private Map<String, Game> gamesBySharingId = new HashMap<>();
 
     public GameService() {
         generateNew("Krakow");
@@ -21,6 +24,7 @@ public class GameService {
         Game newGame = new Game(location);
         String gameId = newGame.getGameId();
         gamesById.put(gameId, newGame);
+        gamesBySharingId.put(newGame.getSharingId(), newGame);
         System.out.println(gameId + " " + location + " " + newGame.getSolution());
         return gameId;
     }
@@ -59,10 +63,19 @@ public class GameService {
     }
 
     public boolean isUserAllowedToPlaySharedGame(String sharingId, String userId) {
-        if (usersBannedForSharedGame.get(sharingId).contains(userId)) {
+        List<String> list = usersBannedForSharedGame.get(sharingId);
+        if (list.contains(userId) || limitReached(list) || sharingIsTooOld(gamesBySharingId.get(sharingId).getCreatedOn())) {
             return false;
         }
-        usersBannedForSharedGame.get(sharingId).add(userId);
+        list.add(userId);
         return true;
+    }
+
+    private boolean limitReached(List<String> list) {
+        return list.size() >= MAX_SHARES;
+    }
+
+    private boolean sharingIsTooOld(Date date) {
+        return new Date().getTime() - date.getTime() < 120 * 1000; //2 MINUTES
     }
 }
