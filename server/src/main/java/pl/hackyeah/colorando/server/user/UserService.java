@@ -1,5 +1,8 @@
 package pl.hackyeah.colorando.server.user;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class UserService {
 
     public void authenticateUser(/* some attributes */) {

@@ -1,13 +1,16 @@
 package pl.hackyeah.colorando.server.game;
 
-import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
     private Map<String, Game> gamesById = new HashMap<>();
+    private Map<String, List<String>> usersBannedForSharedGame = new HashMap<>();
 
     public GameService() {
         generateNew("Krakow");
@@ -16,14 +19,22 @@ public class GameService {
 
     public synchronized String generateNew(String location) {
         Game newGame = new Game(location);
-        String uuid = newGame.getUuid();
-        gamesById.put(uuid, newGame);
-        System.out.println(uuid + " " + location + " " + newGame.getSolution());
-        return uuid;
+        String gameId = newGame.getGameId();
+        gamesById.put(gameId, newGame);
+        System.out.println(gameId + " " + location + " " + newGame.getSolution());
+        return gameId;
     }
 
-    public boolean validateGameStart(String uuid, String deviceLocation) {
-        Game game = gamesById.get(uuid);
+    public synchronized String generateNewGameWithNoSahring() {
+        Game newGame = new Game();
+        String gameId = newGame.getGameId();
+        gamesById.put(gameId, newGame);
+        System.out.println("From sharing: " + gameId + " " + newGame.getSolution());
+        return gameId;
+    }
+
+    public boolean validateGameStart(String gameId, String deviceLocation) {
+        Game game = gamesById.get(gameId);
         return game != null && validateLocation(game.getLocation(), deviceLocation);
     }
 
@@ -31,8 +42,27 @@ public class GameService {
         return location.equals(deviceLocation); // we may want to implement some margin allowance logic here
     }
 
-    public boolean validateGuess(String uuid, String guessAttempt) {
-        Game game = gamesById.get(uuid);
+    public boolean validateGuess(String gameId, String guessAttempt) {
+        Game game = gamesById.get(gameId);
         return game != null && guessAttempt.equals(game.getSolution());
+    }
+
+    public String getSharingId(String gameId) {
+        Game game = gamesById.get(gameId);
+        return game == null ? null : game.getSharingId();
+    }
+
+    public void banGameOrginatorForSharedGame(String gameId, String userId) {
+        List<String> oneUserList = new ArrayList<>();
+        oneUserList.add(userId);
+        usersBannedForSharedGame.put(gamesById.get(gameId).getSharingId(), oneUserList);
+    }
+
+    public boolean isUserAllowedToPlaySharedGame(String sharingId, String userId) {
+        if (usersBannedForSharedGame.get(sharingId).contains(userId)) {
+            return false;
+        }
+        usersBannedForSharedGame.get(sharingId).add(userId);
+        return true;
     }
 }
