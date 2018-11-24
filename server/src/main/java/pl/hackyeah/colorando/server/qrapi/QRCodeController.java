@@ -1,6 +1,13 @@
 package pl.hackyeah.colorando.server.qrapi;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,10 +24,20 @@ class QRCodeController {
     UserService userService;
 
     // Operation for Zabka :)
-    @GetMapping("/qrcode")
-    public String getQrCode(String location) {
-        // TODO: return png
-        return gameService.generateNew(location);
+    @GetMapping(value = "/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
+    public byte[] getQrCode(String location) {
+        String newGameId = gameService.generateNew(location);
+        URL url;
+        try {
+            url = new URL("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + newGameId);
+            BufferedImage img = ImageIO.read(url);
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            ImageIO.write(img, "png", bao);
+            return bao.toByteArray();
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @PostMapping("/qrcode")

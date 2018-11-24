@@ -76,6 +76,6 @@ public class GameService {
     }
 
     private boolean sharingIsTooOld(Date date) {
-        return new Date().getTime() - date.getTime() < 120 * 1000; //2 MINUTES
+        return new Date().getTime() - date.getTime() > 120 * 1000; //2 MINUTES
     }
 }
