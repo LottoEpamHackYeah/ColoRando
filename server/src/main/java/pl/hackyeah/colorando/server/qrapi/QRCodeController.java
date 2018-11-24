@@ -13,8 +13,8 @@ class QRCodeController {
     GameService gameService;
 
     @GetMapping("/qrcode")
-    public String getQrCode() {
-        return "123456789";
+    public String getQrCode(String location) {
+        return gameService.generateNew(location);
     }
 
     @PostMapping("/qrcode")
@@ -24,6 +24,6 @@ class QRCodeController {
 
     @PostMapping("/play")
     public Boolean postUserGuess(String uuid, String guessAttempt) {
-        return true;
+        return gameService.validateGuess(uuid, guessAttempt);
     }
 }
