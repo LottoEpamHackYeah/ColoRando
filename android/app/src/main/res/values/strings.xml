@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ColoRando</string>
+    <string name="game_title">Game</string>
 </resources>
