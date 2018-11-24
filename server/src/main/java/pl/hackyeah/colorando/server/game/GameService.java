@@ -1,7 +1,10 @@
 package pl.hackyeah.colorando.server.game;
 
+import org.springframework.stereotype.Service;
+
 import java.util.Map;
 
+@Service
 public class GameService {
     Map<String, Game> gamesById;
 
