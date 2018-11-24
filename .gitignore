@@ -13,6 +13,7 @@
 build
 .gradle
 local.properties
+Gradle.patch
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
