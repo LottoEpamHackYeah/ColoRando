@@ -68,16 +68,16 @@ public class GameActivity extends Activity {
 
     private TextView createCell(String color) {
         TextView textView = new TextView(this);
-//        textView.setOnClickListener(v -> {
-//         v.setBackgroundColor(Color.parseColor("#996600"));
-//        });
-        textView.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                System.out.println("elo");
-                return true;
-            }
+        textView.setOnClickListener(v -> {
+         v.setBackgroundColor(Color.parseColor("#996600"));
         });
+//        textView.setOnDragListener(new View.OnDragListener() {
+//            @Override
+//            public boolean onDrag(View v, DragEvent event) {
+//                System.out.println("elo");
+//                return true;
+//            }
+//        });
         textView.setBackgroundColor(Color.parseColor(color));
         textView.setWidth(CELL_HEIGHT);
         textView.setHeight(CELL_HEIGHT);
