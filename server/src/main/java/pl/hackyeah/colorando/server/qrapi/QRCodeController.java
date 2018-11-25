@@ -54,7 +54,7 @@ class QRCodeController {
         return byteArray;
     }
 
-    @PostMapping("/qrcode")
+    @GetMapping("/qrcode")
     public Boolean postScannedQrCode(String gameId, String locationId) {
         synchronized (locationId) {
             userService.authenticateUser(/* some attributes */);

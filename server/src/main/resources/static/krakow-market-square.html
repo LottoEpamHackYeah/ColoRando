@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+<img id="imageid" src="qrcode?locationId=krakow-market-square"/>
+
+<script>
+	window.setInterval(function() {
+		document.getElementById("imageid").src="qrcode?locationId=krakow-market-square&time="+ new Date().getTime();
+	}, 500)
+</script>
+
+</body>
+</html>
