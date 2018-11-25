@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import pl.hackyeah.colorando.repository.dto.CodeResult;
 
@@ -22,14 +23,16 @@ public class GameActivity extends Activity {
             "#d9d9d9", "#000000", "#99ffcc", "#6600cc", "#ff66ff"
     };
 
+    private static final boolean[] GAMES = { false, false, false, false, false, true };
+
     private GridLayout gameBoard;
     private TextView header;
     private Button share;
     private Button play;
     private int triesLeft;
-    private static int gamesLeft = 0;
-    private static int credit;
-    private static int gameNumber;
+    private int gamesLeft;
+    private int credit;
+    private static int gameNumber, count = 0;
     private CodeResult codeResult;
 
     @Override
@@ -58,20 +61,34 @@ public class GameActivity extends Activity {
         codeResult = (CodeResult) getIntent().getSerializableExtra("results");
 
         share.setOnClickListener(v1 -> shareIt());
-        play.setOnClickListener(v2 -> {
-            if (triesLeft > 1) {
-                triesLeft--;
-                play.setText("Play (" + String.valueOf(triesLeft) + ")");
-            } else {
-                play.setVisibility(View.GONE);
-                share.setVisibility(View.VISIBLE);
-            }
-        });
-        triesLeft = 3;
+        play.setOnClickListener(v2 -> play(childCount));
+        triesLeft = 2;
+        gamesLeft = GAMES.length - 1;
         credit = 12;
         gameNumber++;
-        gamesLeft += 3;
-        header.setText("Games Left: " + String.valueOf(gamesLeft) + " - Credit: " + String.valueOf(credit) + " PLN");
+        header.setText(String.format("Games Left: %s - Credit: %s PLN ", String.valueOf(gamesLeft), String.valueOf(credit)));
+    }
+
+    private void play(int childCount) {
+        if((count + 1) % 3 != 0) {
+            play.setText(String.format("Play (%s)", triesLeft));
+            Toast.makeText(GameActivity.this, "Unfortunately no :(", Toast.LENGTH_SHORT).show();
+        } else if (GAMES[count]) {
+            for (int i = 0; i < childCount; i++) {
+                View vv = gameBoard.getChildAt(i);
+                ((TextView) vv).setText("OK");
+            }
+
+            play.setVisibility(View.GONE);
+            share.setVisibility(View.VISIBLE);
+            Toast.makeText(GameActivity.this, "GOOD NEWS TODAY \\o/", Toast.LENGTH_SHORT).show();
+        } else if (triesLeft == 0) {
+            play.setText("Ow no! :(");
+            play.setEnabled(false);
+            triesLeft = 2;
+        }
+        count++;
+        triesLeft--;
     }
 
     private void shareIt() {
@@ -124,11 +141,5 @@ public class GameActivity extends Activity {
             }
             return true;
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 }
