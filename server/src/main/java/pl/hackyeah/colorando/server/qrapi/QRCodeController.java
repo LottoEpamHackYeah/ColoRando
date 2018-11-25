@@ -102,7 +102,7 @@ class QRCodeController {
         return gameService.getSharingId(gameId);
     }
 
-    @PostMapping("/sharedGame")
+    @GetMapping("/sharedGame")
     public String getSharedGame(String sharingId) {
         userService.authenticateUser(/* some attributes */);
         if (!gameService.isUserAllowedToPlaySharedGame(sharingId, "234" /* TODO: pass user id */)) {
