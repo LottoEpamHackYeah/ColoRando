@@ -36,10 +36,10 @@ public class GameActivity extends Activity {
             "#d9d9d9", "#000000", "#99ffcc", "#6600cc", "#ff66ff"
     };
 
-    private final int CELL_HEIGHT = 250;
-    private int buttonCount = 3;
     private GridLayout gameBoard;
     private Button share;
+    private Button play;
+    private int triesLeft;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +48,7 @@ public class GameActivity extends Activity {
 
         gameBoard = findViewById(R.id.gameBoard);
         share = findViewById(R.id.share);
+        play = findViewById(R.id.play);
 
         final int childCount = gameBoard.getChildCount();
         View v;
@@ -61,8 +62,18 @@ public class GameActivity extends Activity {
             v.setOnDragListener(new ChoiceDragListener());
             v.setBackgroundColor(Color.parseColor(color));
             ((TextView) v).setText(color);
-            share.setOnClickListener(v1 -> shareIt());
         }
+        share.setOnClickListener(v1 -> shareIt());
+        play.setOnClickListener(v2 -> {
+            if(triesLeft > 1) {
+                triesLeft--;
+                play.setText("Play (" + String.valueOf(triesLeft) + ")");
+            } else {
+                play.setVisibility(View.GONE);
+                share.setVisibility(View.VISIBLE);
+            }
+        });
+        triesLeft = 3;
     }
 
     private void shareIt() {
@@ -72,37 +83,6 @@ public class GameActivity extends Activity {
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hello, I send you invitation to the ColoRando game!");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
-    }
-
-    private Button getTryItButton() {
-        Button button = new Button(this);
-        button.setId(R.id.tryItButtonId);
-        button.setText(String.valueOf(buttonCount));
-        button.setOnClickListener(v -> {
-            buttonCount--;
-            Button v1 = (Button) v;
-            v1.setText(String.valueOf(buttonCount));
-        });
-        button.setGravity(Gravity.CENTER);
-        return button;
-    }
-
-    private List<TextView> getCells(String... colors) {
-        List<TextView> textViews = new ArrayList<>();
-        for (String color : colors) {
-            textViews.add(createCell(color));
-        }
-        return textViews;
-    }
-
-    private TextView createCell(String color) {
-        TextView textView = new TextView(this);
-        textView.setOnTouchListener(new ChoiceTouchListener());
-        textView.setOnDragListener(new ChoiceDragListener());
-        textView.setBackgroundColor(Color.parseColor(color));
-        textView.setWidth(CELL_HEIGHT);
-        textView.setHeight(CELL_HEIGHT);
-        return textView;
     }
 
     private class ChoiceTouchListener implements View.OnTouchListener {
