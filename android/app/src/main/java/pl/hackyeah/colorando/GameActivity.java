@@ -1,18 +1,25 @@
 package pl.hackyeah.colorando;
 
+import android.content.ClipData;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.DragEvent;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +27,8 @@ import java.util.List;
 public class GameActivity extends Activity {
 
     private final int CELL_HEIGHT = 250;
+
+    private static TextView firstTouchedTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,20 +77,56 @@ public class GameActivity extends Activity {
 
     private TextView createCell(String color) {
         TextView textView = new TextView(this);
-        textView.setOnClickListener(v -> {
-         v.setBackgroundColor(Color.parseColor("#996600"));
-        });
-//        textView.setOnDragListener(new View.OnDragListener() {
-//            @Override
-//            public boolean onDrag(View v, DragEvent event) {
-//                System.out.println("elo");
-//                return true;
-//            }
-//        });
+        textView.setOnTouchListener(new ChoiceTouchListener());
+        textView.setOnDragListener(new ChoiceDragListener());
         textView.setBackgroundColor(Color.parseColor(color));
         textView.setWidth(CELL_HEIGHT);
         textView.setHeight(CELL_HEIGHT);
         return textView;
+    }
+
+    private class ChoiceTouchListener implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                v.startDragAndDrop(data, shadowBuilder, v, 0);
+                firstTouchedTextView = (TextView)v;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private class ChoiceDragListener implements View.OnDragListener {
+
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    System.out.println("Action drag started");
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    System.out.println("Action drag ended");
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    System.out.println("Action drag exited");
+                    break;
+                case DragEvent.ACTION_DROP:
+                    System.out.println("Action drop");
+                    TextView fromCell = (TextView) event.getLocalState();
+                    Drawable targetCellDrawable = v.getBackground();
+                    Drawable fromCellDrawable = fromCell.getBackground();
+                    v.setBackground(fromCellDrawable);
+                    fromCell.setBackground(targetCellDrawable);
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    System.out.println("Action drag entered");
+                    break;
+            }
+            return true;
+        }
     }
 
 }
