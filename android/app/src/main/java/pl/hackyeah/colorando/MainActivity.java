@@ -1,13 +1,14 @@
 package pl.hackyeah.colorando;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,11 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+import pl.hackyeah.colorando.repository.dto.CodeResult;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends Activity {
 
     private SurfaceView surfaceView;
@@ -26,8 +32,8 @@ public class MainActivity extends Activity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private static final int REQUEST_CAMERA_PERMISSION = 201;
-    private Button btnAction;
     private String intentData = "";
+    private AlertDialog alert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,17 +41,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         initViews();
-        initControllers();
-    }
-
-    private void initControllers() {
-        btnAction.setOnClickListener(v -> startActivity(GameActivity.class));
     }
 
     private void initViews() {
         txtBarcodeValue = findViewById(R.id.txtBarcodeValue);
         surfaceView = findViewById(R.id.surfaceView);
-        btnAction = findViewById(R.id.btnAction);
     }
 
     private void initialiseDetectorsAndSources() {
@@ -87,7 +87,6 @@ public class MainActivity extends Activity {
             }
         });
 
-
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
@@ -103,14 +102,70 @@ public class MainActivity extends Activity {
                         if (barcodes.valueAt(0).email != null) {
                             txtBarcodeValue.removeCallbacks(null);
                             intentData = barcodes.valueAt(0).email.address;
-                            txtBarcodeValue.setText(intentData);
-                            btnAction.setText("ADD CONTENT TO THE MAIL");
                         } else {
-                            btnAction.setText("LAUNCH URL");
                             intentData = barcodes.valueAt(0).displayValue;
-                            txtBarcodeValue.setText(intentData);
-
                         }
+
+                        Log.i("ADDRESS", intentData);
+                        PostScannedQRCode service = RetrofitClient.getInstance("http://10.250.194.105:8080/")
+                                .create(PostScannedQRCode.class);
+
+                        Call<CodeResult> c = service.postQRCode(intentData, "krakow-market-square");
+
+                        c.enqueue(new Callback<CodeResult>() {
+                            @Override
+                            public void onResponse(Call<CodeResult> call, Response<CodeResult> response) {
+                                int code = response.code();
+
+                                Log.i("CODE", String.valueOf(code));
+
+                                switch (code) {
+                                    case 200:
+                                        CodeResult codeResult = response.body();
+                                        if (codeResult.isValid()) {
+                                            txtBarcodeValue.setText("Valid");
+                                            cameraSource.stop();
+                                            if (alert == null) {
+                                                alert = new AlertDialog.Builder(MainActivity.this)
+                                                        .setTitle("Payment")
+                                                        .setMessage("Please, confirm payment?")
+                                                        .setPositiveButton("Yes",
+                                                                (dialog, which) -> {
+                                                                    startActivity(GameActivity.class, codeResult);
+                                                                    dialog.cancel();
+                                                                })
+                                                        .setNegativeButton("No",
+                                                                (dialog, which) -> {
+                                                                    try {
+                                                                        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                                                                            cameraSource.start(surfaceView.getHolder());
+                                                                        } else {
+                                                                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+                                                                                    Manifest.permission.CAMERA
+                                                                            }, REQUEST_CAMERA_PERMISSION);
+                                                                        }
+                                                                    } catch (IOException e) {
+                                                                        e.printStackTrace();
+                                                                    }
+                                                                    dialog.cancel();
+                                                                })
+                                                        .create();
+                                            }
+
+                                            if (!alert.isShowing()) {
+                                                alert.show();
+                                            }
+                                        }
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<CodeResult> call, Throwable t) {
+                                t.printStackTrace();
+                                txtBarcodeValue.setText(t.getMessage());
+                            }
+                        });
                     });
 
                 }
@@ -128,5 +183,6 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         initialiseDetectorsAndSources();
+        txtBarcodeValue.setText(R.string.code_result);
     }
 }
