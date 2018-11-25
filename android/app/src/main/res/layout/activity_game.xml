@@ -8,6 +8,17 @@
     android:paddingTop="5dp"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        style="@style/button_text"
+        android:textColor="#1f49a1"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:text="Games Left: 03 - Credit: 53.89 PLN" />
+
     <GridLayout
         android:id="@+id/gameBoard"
         android:layout_width="wrap_content"
@@ -44,7 +55,7 @@
     <Button
         android:id="@+id/share"
         android:layout_width="match_parent"
-        android:layout_height="105dp"
+        android:layout_height="90dp"
         style="@style/button_text"
         android:textColor="#1f49a1"
         android:background="@drawable/quiz_answer_button"
