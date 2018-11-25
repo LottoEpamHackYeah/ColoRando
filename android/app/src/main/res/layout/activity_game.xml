@@ -1,49 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp"
-    >
+    android:paddingEnd="5dp"
+    android:paddingStart="5dp"
+    android:paddingTop="5dp"
+    android:orientation="vertical">
 
-        <!--row 1-->
-    <!--<TextView-->
-        <!--android:id="@+id/t1"-->
-        <!--android:layout_width="100sp"-->
-        <!--android:layout_height="100sp"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:background="@color/colorPrimaryDark" />-->
+    <GridLayout
+        android:id="@+id/gameBoard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:gravity="center">
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+    </GridLayout>
 
-    <!--<TextView-->
-        <!--android:id="@+id/t2"-->
-        <!--android:layout_width="100sp"-->
-        <!--android:layout_height="100sp"-->
-        <!--android:background="@color/colorAccent" />-->
+    <Button
+        android:id="@+id/play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Try (9)"/>
 
-        <!--<TextView-->
-            <!--android:id="@+id/row1col3"-->
-            <!--android:layout_width="100sp"-->
-            <!--android:layout_height="100sp"-->
-            <!--android:text="TextView" />-->
-
-
-        <!--&lt;!&ndash;row 2&ndash;&gt;-->
-        <!--<TextView-->
-            <!--android:id="@+id/row2col1"-->
-            <!--android:layout_width="100sp"-->
-            <!--android:layout_height="100sp"-->
-            <!--android:text="TextView" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/row2col2"-->
-            <!--android:layout_width="100sp"-->
-            <!--android:layout_height="100sp"-->
-            <!--android:text="TextView" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/row2col3"-->
-            <!--android:layout_width="100sp"-->
-            <!--android:layout_height="100sp"-->
-            <!--android:text="TextView" />-->
-</RelativeLayout>
+    <GridLayout
+        android:id="@+id/results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:visibility="invisible">
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+        <TextView android:text="0" android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
+    </GridLayout>
+</LinearLayout>
