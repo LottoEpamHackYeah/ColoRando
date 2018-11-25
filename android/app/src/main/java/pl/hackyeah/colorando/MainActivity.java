@@ -2,14 +2,12 @@ package pl.hackyeah.colorando;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,14 +19,9 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static java.lang.String.format;
 
 public class MainActivity extends Activity {
 
@@ -121,27 +114,29 @@ public class MainActivity extends Activity {
                         }
 
                         Log.i("ADDRESS", intentData);
-                        PostScannedQRCode service = RetrofitClient.getInstance("http://10.250.195.24:8080/")
+                        PostScannedQRCode service = RetrofitClient.getInstance("http://10.250.194.105:8080/")
                                 .create(PostScannedQRCode.class);
 
-                        RequestBody body = RequestBody.create(MediaType.get("text/plain"), "gameId=" + intentData + ",locationId=krakow-market-square");
-                        Call<ResponseBody> c = service.postQRCode(body);
+                        Call<String> c = service.postQRCode(intentData, "krakow-market-square");
 
-                        c.enqueue(new Callback<ResponseBody>() {
+                        c.enqueue(new Callback<String>() {
                             @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            public void onResponse(Call<String> call, Response<String> response) {
                                 int code = response.code();
+
+                                Log.i("CODE", String.valueOf(code));
 
                                 switch (code) {
                                     case 200:
-                                        txtBarcodeValue.setText(response.body().toString());
+                                        txtBarcodeValue.setText(response.body());
                                         break;
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                txtBarcodeValue.setText("Problems");
+                            public void onFailure(Call<String> call, Throwable t) {
+                                t.printStackTrace();
+                                txtBarcodeValue.setText(t.getMessage());
                             }
                         });
                     });

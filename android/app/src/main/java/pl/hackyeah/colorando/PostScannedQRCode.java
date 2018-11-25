@@ -1,14 +1,12 @@
 package pl.hackyeah.colorando;
 
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.POST;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface PostScannedQRCode {
 
-    @POST("qrcode")
-    Call<ResponseBody> postQRCode(@Body RequestBody body);
+    @GET("qrcode")
+    Call<String> postQRCode(@Query("gameId") String gameId, @Query("locationId") String locationId);
 }
