@@ -50,8 +50,7 @@
         android:layout_marginTop="5dp"
         android:textColor="#1f49a1"
         style="@style/button_text"
-        android:background="@drawable/quiz_answer_button"
-        />
+        android:background="@drawable/quiz_answer_button" />
 
     <Button
         android:id="@+id/share"
@@ -61,24 +60,5 @@
         android:textColor="#1f49a1"
         android:background="@drawable/quiz_answer_button"
         android:visibility="invisible"
-        android:text="Share game with friends"/>
-
-    <GridLayout
-        android:id="@+id/results"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:columnCount="3"
-        android:rowCount="3"
-        android:visibility="invisible">
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-        <TextView android:gravity="center" android:width="@dimen/square" android:height="@dimen/square" />
-    </GridLayout>
+        android:text="Share game with friends" />
 </LinearLayout>
