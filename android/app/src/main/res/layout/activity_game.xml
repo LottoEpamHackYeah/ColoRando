@@ -41,6 +41,15 @@
         android:background="@drawable/quiz_answer_button"
         />
 
+    <Button
+        android:id="@+id/share"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        style="@style/button_text"
+        android:textColor="#1f49a1"
+        android:background="@drawable/quiz_answer_button"
+        android:text="Share game with friends"/>
+
     <GridLayout
         android:id="@+id/results"
         android:layout_width="wrap_content"

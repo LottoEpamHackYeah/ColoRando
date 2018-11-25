@@ -1,6 +1,7 @@
 package pl.hackyeah.colorando;
 
 import android.content.ClipData;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
@@ -38,6 +39,7 @@ public class GameActivity extends Activity {
     private final int CELL_HEIGHT = 250;
     private int buttonCount = 3;
     private GridLayout gameBoard;
+    private Button share;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class GameActivity extends Activity {
         setContentView(R.layout.activity_game);
 
         gameBoard = findViewById(R.id.gameBoard);
+        share = findViewById(R.id.share);
 
         final int childCount = gameBoard.getChildCount();
         View v;
@@ -58,7 +61,17 @@ public class GameActivity extends Activity {
             v.setOnDragListener(new ChoiceDragListener());
             v.setBackgroundColor(Color.parseColor(color));
             ((TextView) v).setText(color);
+            share.setOnClickListener(v1 -> shareIt());
         }
+    }
+
+    private void shareIt() {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        String shareBody = "https://www.lotto.pl/colorando/if-you-enjoy-our-app/you-know-what-to-do:)";
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hello, I send you invitation to the ColoRando game!");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
 
     private Button getTryItButton() {
