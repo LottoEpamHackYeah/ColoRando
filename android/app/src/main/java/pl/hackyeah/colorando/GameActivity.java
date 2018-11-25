@@ -87,6 +87,7 @@ public class GameActivity extends Activity {
             share.setVisibility(View.VISIBLE);
             triesLeft = 2;
             count = count == (GAMES.length - 1) ? 0 : count;
+            Toast.makeText(GameActivity.this, "Unfortunately no :(", Toast.LENGTH_SHORT).show();
         }
         count++;
         triesLeft--;
