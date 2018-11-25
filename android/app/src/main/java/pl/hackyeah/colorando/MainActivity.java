@@ -2,8 +2,10 @@ package pl.hackyeah.colorando;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -18,6 +20,15 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static java.lang.String.format;
 
 public class MainActivity extends Activity {
 
@@ -103,14 +114,36 @@ public class MainActivity extends Activity {
                         if (barcodes.valueAt(0).email != null) {
                             txtBarcodeValue.removeCallbacks(null);
                             intentData = barcodes.valueAt(0).email.address;
-                            txtBarcodeValue.setText(intentData);
                             btnAction.setText("ADD CONTENT TO THE MAIL");
                         } else {
                             btnAction.setText("LAUNCH URL");
                             intentData = barcodes.valueAt(0).displayValue;
-                            txtBarcodeValue.setText(intentData);
-
                         }
+
+                        Log.i("ADDRESS", intentData);
+                        PostScannedQRCode service = RetrofitClient.getInstance("http://10.250.195.24:8080/")
+                                .create(PostScannedQRCode.class);
+
+                        RequestBody body = RequestBody.create(MediaType.get("text/plain"), "gameId=" + intentData + ",locationId=krakow-market-square");
+                        Call<ResponseBody> c = service.postQRCode(body);
+
+                        c.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                int code = response.code();
+
+                                switch (code) {
+                                    case 200:
+                                        txtBarcodeValue.setText(response.body().toString());
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                txtBarcodeValue.setText("Problems");
+                            }
+                        });
                     });
 
                 }

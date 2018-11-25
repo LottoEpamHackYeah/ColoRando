@@ -8,4 +8,6 @@ public class Activity extends AppCompatActivity {
     protected <T extends Activity> void startActivity(Class<T> _class) {
         super.startActivity(new Intent(this, _class));
     }
+
+
 }
