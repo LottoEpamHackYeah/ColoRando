@@ -14,6 +14,7 @@ public class GameService {
     private Map<String, Game> gamesById = new HashMap<>();
     private Map<String, List<String>> usersBannedForSharedGame = new HashMap<>();
     private Map<String, Game> gamesBySharingId = new HashMap<>();
+    private Map<String, byte[]> imageByLocationId = new HashMap<>();
 
     public GameService() {
         generateNew("Krakow");
@@ -77,5 +78,17 @@ public class GameService {
 
     private boolean sharingIsTooOld(Date date) {
         return new Date().getTime() - date.getTime() > 120 * 1000; //2 MINUTES
+    }
+
+    public byte[] getCachedPngForLocation(String locationId) {
+        return imageByLocationId.get(locationId);
+    }
+
+    public void cachePngForLocation(String locationId, byte[] byteArray) {
+        imageByLocationId.put(locationId, byteArray);
+    }
+
+    public void consumeCachedPngForLocation(String locationId) {
+        imageByLocationId.remove(locationId);
     }
 }

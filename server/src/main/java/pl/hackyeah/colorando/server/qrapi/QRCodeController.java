@@ -2,6 +2,8 @@ package pl.hackyeah.colorando.server.qrapi;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -25,30 +27,45 @@ class QRCodeController {
 
     // Operation for Zabka :)
     @GetMapping(value = "/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
-    public byte[] getQrCode(String location) {
-        String newGameId = gameService.generateNew(location);
-        URL url;
-        try {
-            url = new URL("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + newGameId);
-            BufferedImage img = ImageIO.read(url);
-            ByteArrayOutputStream bao = new ByteArrayOutputStream();
-            ImageIO.write(img, "png", bao);
-            return bao.toByteArray();
-
-        } catch (Exception e) {
-            return null;
+    public byte[] getQrCode(String locationId) {
+        synchronized (locationId) {
+            byte[] currentPngForLocation = gameService.getCachedPngForLocation(locationId);
+            if (currentPngForLocation != null) {
+                return currentPngForLocation;
+            }
+            String newGameId = gameService.generateNew(locationId);
+            try {
+                byte[] byteArray = buildPng(newGameId);
+                gameService.cachePngForLocation(locationId, byteArray);
+                return byteArray;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 
+    private byte[] buildPng(String newGameId) throws MalformedURLException, IOException {
+        URL url = new URL("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + newGameId);
+        BufferedImage img = ImageIO.read(url);
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        ImageIO.write(img, "png", bao);
+        byte[] byteArray = bao.toByteArray();
+        return byteArray;
+    }
+
     @PostMapping("/qrcode")
-    public Boolean postScannedQrCode(String gameId, String location) {
-        userService.authenticateUser(/*some attributes*/);
-        boolean validationResult = gameService.validateGameStart(gameId, location);
-        if (validationResult) {
-            userService.withdrawMoney(/*some attributes*/);
-            gameService.banGameOrginatorForSharedGame(gameId, "123" /*TODO: pass user id*/);
+    public Boolean postScannedQrCode(String gameId, String locationId) {
+        synchronized (locationId) {
+            userService.authenticateUser(/* some attributes */);
+            boolean validationResult = gameService.validateGameStart(gameId, locationId);
+            if (validationResult) {
+                gameService.consumeCachedPngForLocation(locationId);
+                userService.withdrawMoney(/* some attributes */);
+                gameService.banGameOrginatorForSharedGame(gameId, "123" /* TODO: pass user id */);
+            }
+            return validationResult;
         }
-        return validationResult;
     }
 
     @PostMapping("/play")
