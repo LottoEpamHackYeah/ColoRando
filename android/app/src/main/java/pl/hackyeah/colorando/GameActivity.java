@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,14 +28,16 @@ import java.util.List;
 public class GameActivity extends Activity {
 
     private final int CELL_HEIGHT = 250;
-
-    private static TextView firstTouchedTextView;
+    private int buttonCount = 3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         TableLayout layout = new TableLayout(this);
+
+        layout.setBackgroundColor(Color.parseColor("#00ffcc"));
+
         TableRow row1 = new TableRow(this);
         TableRow row2 = new TableRow(this);
         TableRow row3 = new TableRow(this);
@@ -42,7 +45,7 @@ public class GameActivity extends Activity {
         List<TextView> cells = getCells("#00ff00", "#006bb3", "#ff0000", "#ff9900",
                 "#d9d9d9", "#000000", "#99ffcc", "#6600cc", "#ff66ff");
 
-        TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+        TableLayout.LayoutParams lp = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         lp.leftMargin = 160;
         lp.topMargin = 350;
 
@@ -64,7 +67,24 @@ public class GameActivity extends Activity {
         layout.addView(row2);
         layout.addView(row3);
 
+
+        Button tryItButton = getTryItButton();
+        layout.addView(tryItButton);
+
         setContentView(layout);
+    }
+
+    private Button getTryItButton() {
+        Button button = new Button(this);
+        button.setId(R.id.tryItButtonId);
+        button.setText(String.valueOf(buttonCount));
+        button.setOnClickListener(v -> {
+            buttonCount--;
+            Button v1 = (Button) v;
+            v1.setText(String.valueOf(buttonCount));
+        });
+        button.setGravity(Gravity.CENTER);
+        return button;
     }
 
     private List<TextView> getCells(String... colors) {
@@ -92,7 +112,6 @@ public class GameActivity extends Activity {
                 ClipData data = ClipData.newPlainText("", "");
                 View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
                 v.startDragAndDrop(data, shadowBuilder, v, 0);
-                firstTouchedTextView = (TextView)v;
                 return true;
             }
             return false;
