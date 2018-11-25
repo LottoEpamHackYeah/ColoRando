@@ -39,7 +39,7 @@ public class GameService {
     }
 
     public boolean validateGameStart(String gameId, String deviceLocation) {
-        Game game = gamesById.get(gameId);
+        Game game = getGameById(gameId);
         return game != null && validateLocation(game.getLocation(), deviceLocation);
     }
 
@@ -48,19 +48,23 @@ public class GameService {
     }
 
     public boolean validateGuess(String gameId, String guessAttempt) {
-        Game game = gamesById.get(gameId);
+        Game game = getGameById(gameId);
         return game != null && guessAttempt.equals(game.getSolution());
     }
 
     public String getSharingId(String gameId) {
-        Game game = gamesById.get(gameId);
+        Game game = getGameById(gameId);
         return game == null ? null : game.getSharingId();
+    }
+
+    public Game getGameById(String gameId) {
+        return gamesById.get(gameId);
     }
 
     public void banGameOrginatorForSharedGame(String gameId, String userId) {
         List<String> oneUserList = new ArrayList<>();
         oneUserList.add(userId);
-        usersBannedForSharedGame.put(gamesById.get(gameId).getSharingId(), oneUserList);
+        usersBannedForSharedGame.put(getGameById(gameId).getSharingId(), oneUserList);
     }
 
     public boolean isUserAllowedToPlaySharedGame(String sharingId, String userId) {
