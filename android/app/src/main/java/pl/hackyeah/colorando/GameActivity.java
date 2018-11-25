@@ -30,8 +30,8 @@ public class GameActivity extends Activity {
     private Button share;
     private Button play;
     private int triesLeft;
-    private int gamesLeft;
-    private int credit;
+    private static int gamesLeft;
+    private static int credit = 12;
     private static int gameNumber, count = 0;
     private CodeResult codeResult;
 
@@ -64,7 +64,7 @@ public class GameActivity extends Activity {
         play.setOnClickListener(v2 -> play(childCount));
         triesLeft = 2;
         gamesLeft = GAMES.length - 1;
-        credit = 12;
+        credit -= 2;
         gameNumber++;
         header.setText(String.format("Games Left: %s - Credit: %s PLN ", String.valueOf(gamesLeft), String.valueOf(credit)));
     }
