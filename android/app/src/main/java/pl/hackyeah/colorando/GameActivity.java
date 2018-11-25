@@ -3,31 +3,17 @@ package pl.hackyeah.colorando;
 import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.view.DragEvent;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import pl.hackyeah.colorando.repository.dto.CodeResult;
 
 public class GameActivity extends Activity {
 
@@ -40,6 +26,7 @@ public class GameActivity extends Activity {
     private Button share;
     private Button play;
     private int triesLeft;
+    private CodeResult codeResult;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +50,9 @@ public class GameActivity extends Activity {
             v.setBackgroundColor(Color.parseColor(color));
             ((TextView) v).setText(color);
         }
+
+        codeResult = (CodeResult) getIntent().getSerializableExtra("results");
+
         share.setOnClickListener(v1 -> shareIt());
         play.setOnClickListener(v2 -> {
             if(triesLeft > 1) {

@@ -122,8 +122,8 @@ public class MainActivity extends Activity {
 
                                 switch (code) {
                                     case 200:
-                                        CodeResult cr = response.body();
-                                        if (cr.isValid()) {
+                                        CodeResult codeResult = response.body();
+                                        if (codeResult.isValid()) {
                                             txtBarcodeValue.setText("Valid");
                                             cameraSource.stop();
                                             if (alert == null) {
@@ -132,7 +132,7 @@ public class MainActivity extends Activity {
                                                         .setMessage("Please, confirm payment?")
                                                         .setPositiveButton("Yes",
                                                                 (dialog, which) -> {
-                                                                    startActivity(GameActivity.class);
+                                                                    startActivity(GameActivity.class, codeResult);
                                                                     dialog.cancel();
                                                                 })
                                                         .setNegativeButton("No",
