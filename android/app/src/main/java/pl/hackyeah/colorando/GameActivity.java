@@ -61,7 +61,6 @@ public class GameActivity extends Activity {
             v.setOnTouchListener(new ChoiceTouchListener());
             v.setOnDragListener(new ChoiceDragListener());
             v.setBackgroundColor(Color.parseColor(color));
-            ((TextView) v).setText(color);
         }
         share.setOnClickListener(v1 -> shareIt());
         play.setOnClickListener(v2 -> {
