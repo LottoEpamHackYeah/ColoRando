@@ -41,8 +41,8 @@ public class GameActivity extends Activity {
     private Button share;
     private Button play;
     private int triesLeft;
-    private int gamesLeft;
-    private int credit;
+    private static int gamesLeft = 0;
+    private static int credit;
     private static int gameNumber;
 
     @Override
@@ -69,7 +69,7 @@ public class GameActivity extends Activity {
         }
         share.setOnClickListener(v1 -> shareIt());
         play.setOnClickListener(v2 -> {
-            if(triesLeft > 1) {
+            if (triesLeft > 1) {
                 triesLeft--;
                 play.setText("Play (" + String.valueOf(triesLeft) + ")");
             } else {
@@ -78,16 +78,16 @@ public class GameActivity extends Activity {
             }
         });
         triesLeft = 3;
-        gamesLeft = 3;
         credit = 12;
         gameNumber++;
+        gamesLeft += 3;
         header.setText("Games Left: " + String.valueOf(gamesLeft) + " - Credit: " + String.valueOf(credit) + " PLN");
     }
 
     private void shareIt() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        String shareBody = "https://www.lotto.pl/colorando/if-you-enjoy-our-app/you-know-what-to-do:)";
+        String shareBody = "https://www.lotto.pl/colorando/if-you-enjoy-our-app/this-URL-is-waiting-for-ColoRando:)";
         sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hello, I send you invitation to the ColoRando game!");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
