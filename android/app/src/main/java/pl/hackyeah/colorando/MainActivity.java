@@ -87,7 +87,6 @@ public class MainActivity extends Activity {
             }
         });
 
-
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {

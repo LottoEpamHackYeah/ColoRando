@@ -37,9 +37,13 @@ public class GameActivity extends Activity {
     };
 
     private GridLayout gameBoard;
+    private TextView header;
     private Button share;
     private Button play;
     private int triesLeft;
+    private int gamesLeft;
+    private int credit;
+    private static int gameNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +53,7 @@ public class GameActivity extends Activity {
         gameBoard = findViewById(R.id.gameBoard);
         share = findViewById(R.id.share);
         play = findViewById(R.id.play);
+        header = findViewById(R.id.header);
 
         final int childCount = gameBoard.getChildCount();
         View v;
@@ -73,6 +78,10 @@ public class GameActivity extends Activity {
             }
         });
         triesLeft = 3;
+        gamesLeft = 3;
+        credit = 12;
+        gameNumber++;
+        header.setText("Games Left: " + String.valueOf(gamesLeft) + " - Credit: " + String.valueOf(credit) + " PLN");
     }
 
     private void shareIt() {
