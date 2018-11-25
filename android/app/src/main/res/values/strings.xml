@@ -2,4 +2,5 @@
     <string name="app_name">ColoRando</string>
     <string name="game_title">Game</string>
     <string name="title_activity_game2">GameActivity2</string>
+    <string name="code_result">Show me the QRcode...</string>
 </resources>
